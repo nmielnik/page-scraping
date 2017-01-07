@@ -1,0 +1,27 @@
+{
+  "name": "page-scraping",
+  "version": "0.0.0",
+  "description": "Page Scraping Project",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/nmielnik/page-scraping"
+  },
+  "author": "Nate Mielnik",
+  "license": "MIT",
+  "devDependencies": {
+    "connect": "^3.4.0",
+    "serve-static": "^1.10.0"
+  },
+  "dependencies": {
+    "cheerio": "^0.19.0",
+    "request": "^2.61.0",
+    "bluebird": "^2.9.0",
+    "minimist": "^1.2.0",
+    "moment": "^2.10.0",
+    "glob": "^5.0.15"
+  },
+  "bugs": {
+    "url": "https://github.com/nmielnik/page-scraping/issues"
+  },
+  "homepage": "http://github.com/nmielnik/page-scraping"
+}
