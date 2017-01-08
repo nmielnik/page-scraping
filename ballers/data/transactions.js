@@ -79,13 +79,11 @@ var Group = function (id, $cells, iYear) {
     this.id = id;
     this.trans = [];
     this.date = DATETIME.ParseESPNTableCell($cells.get(0), iYear);
+    var typeCell = $cells.get(1);
+    var action = typeCell.childNodes[5] ? typeCell.childNodes[5].nodeValue : typeCell.childNodes[4].nodeValue;
 
     //this.setAction(elRow.cells[1].childNodes[5].nodeValue);
-    if (!$cells.get(1).childNodes[5]) {
-        console.log("!!! Expected Node 5 to have a value !!!");
-        console.log($cells.get(1).childNodes);
-    }
-    this.setAction($cells.get(1).childNodes[5].nodeValue);
+    this.setAction(action);
 
     var elTrans = $cells.get(2);
     var children = elTrans.childNodes;
@@ -102,7 +100,7 @@ var Group = function (id, $cells, iYear) {
             var sOtherTeam = (oNextTrans.team == oNextTrans.destination) ? oNextTrans.source : oNextTrans.destination;
             this.trans.push(oNextTrans.duplicate({ action: TransType.Acquire, team: sOtherTeam }));
         }
-        
+
         iNode += 4;
     }
 }
@@ -181,7 +179,7 @@ Transaction = function (elTeam, elPlayer, elMove, elLast) {
                     this.cost = parseInt(res[1]);
             }
         }
-        this.setDestination(dest);
+        this.setDestination(dest.trim());
         this.source = (infoParts.length > 1) ? infoParts[1] : this.team;
 
         var plyrParts = infoParts[0].split(" ");

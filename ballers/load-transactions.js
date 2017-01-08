@@ -1,3 +1,5 @@
+'use strict';
+
 var argMap = require('minimist')(process.argv.slice(2));
 
 var path = require("path");
@@ -21,13 +23,13 @@ if (!argMap.outputFile) {
 var outputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/BallersXML', argMap.outputFile);
 
 var srcDir = '//EINSTEIN/Web/BallersUnite/RawHTML';
-var srcFileFormat = '{year}Transactions.htm';
-var filePath = path.join(srcDir, srcFileFormat.replace('{year}', year));
+var srcFileFormat = `${year}Transactions.html`;
+var filePath = path.join(srcDir, srcFileFormat);
 Parser.parseFile({
 	filePath: filePath
 }).then(function (data) {
 	var transactions = Transactions.parseTransactions(year, data.body);
-	
+
 	fs.writeFileAsync(outputFile, transactions.toXML()).then(function () {
 		console.log('Saved to: ' + outputFile);
 	}).catch(function (error) {
