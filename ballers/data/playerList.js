@@ -5,14 +5,11 @@
 David Johnson <UNI> - RB Ari
 David Johnson <Ark St> - TE Pit
 
-Alex Smith <Utah> - QB KC
-Alex Smith <Stanford> - TE Wsh
-
 Ryan Griffin <UConn> - TE Hou
 Ryan Griffin <Tulane> - QB TB
 
-Michael Thomas <Ohio St> - WR NO
-Michale Thomas <S Miss> - WR LA
+Chris Thompson <FSU> - RB Wsh
+Chris Thompson <Florida> - WR Hou
 
 */
 
@@ -43,11 +40,6 @@ const SPECIAL_CASES = {
         last: 'Davis',
         identifier: 'SC'
     },
-    'Mike Williams': {
-        first: 'Mike',
-        last: 'Williams',
-        identifier: 'Syracuse'
-    },
     'Chris Givens': {
         first: 'Chris',
         last: 'Givens',
@@ -63,11 +55,6 @@ const SPECIAL_CASES = {
         last: 'Smith',
         identifier: 'Washington'
     },
-    'Chris Harper': {
-        first: 'Chris',
-        last: 'Harper',
-        identifier: 'Cal'
-    },
     'Devin Lewis Fuller': {
         first: 'Devin Lewis',
         last: 'Fuller'
@@ -79,6 +66,42 @@ const SPECIAL_CASES = {
     'Andre Jerome Caldwell': {
         first: 'Andre Jerome',
         last: 'Caldwell'
+    },
+    'Maurice Lynell Harris': {
+        first: 'Maurice',
+        last: 'Harris'
+    },
+    'Josh Javon Johnson': {
+        first: 'Josh',
+        last: 'Johnson'
+    },
+    'Charles D. Johnson': {
+        first: 'Charles',
+        last: 'Johnson'
+    },
+    'Alex Smith': {
+        first: 'Alex',
+        last: 'Smith',
+        identifier: 'Utah'
+    },
+    'Michael Thomas': {
+        first: 'Michael',
+        last: 'Thomas',
+        identifier: 'Ohio St'
+    },
+    'Mike Williams': {
+        first: 'Mike',
+        last: 'Williams',
+        identifier: 'Clemson'
+    },
+    'Chris Harper': {
+        first: 'Chris',
+        last: 'Harper',
+        identifier: 'Cal'
+    },
+    'Equanimeous St. Brown': {
+        first: 'Equanimeous',
+        last: 'St. Brown'
     }
 };
 

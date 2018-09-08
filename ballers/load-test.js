@@ -8,30 +8,10 @@ var Parser = require("../parser");
 var BoxScore = require("./data/boxscore.js");
 var ScoringSummary = require("./data/scoring-summary.js");
 
-var year = argMap.year || 2016;
-if (!year || isNaN(year) || year < 2006 || year > new Date().getFullYear()) {
-	console.error('year: ' + argMap.year + ' is invalid');
-	return;
-}
-
-var week = argMap.week;
-if (!week) {
-	console.error('week: ' + argMap.week + ' is invalid');
-	return;
-}
-
-if (!argMap.games) {
-	console.error('games: ' + argMap.games + ' is invalid');
-	return;
-}
-var games = argMap.games.split(';');
-
-if (!argMap.outputFile) {
-	console.error('outputFile: ' + argMap.outputFile + ' is invalid');
-	return;
-}
-var outputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/BallersXML', argMap.outputFile);
-
+var year = 2017;
+var week = 1;
+var games = ['01@12', '03@05', '06@02', '08@07', '09@04', '10@11'];
+var outputFile = 'temp.xml';
 var srcDir = '//EINSTEIN/Web/BallersUnite/RawHTML';
 var promises = [];
 games.forEach(function (game) {
@@ -43,6 +23,7 @@ games.forEach(function (game) {
 			Parser.parseFile({ filePath: path.join(srcDir, otherFileName) })
 		])
 		.then(function (res) {
+			console.log(`res is length ${res.length}`);
 			return {
 				boxScoreBody: res[0].body,
 				scoringBody: res[1].body
@@ -54,15 +35,15 @@ games.forEach(function (game) {
 Promise.all(promises).spread(function () {
 	var parts = ['<LeagueResults year="' + year + '">'];
 	Array.prototype.slice.apply(arguments).forEach(function (data) {
+		// var lineup = BoxScore.parseBoxScore(data.boxScoreBody);
 		var scoring = ScoringSummary.parseScoringSummary(data.scoringBody);
-		var lineup = BoxScore.parseBoxScore(data.boxScoreBody, scoring);
 		console.log('------------------------------');
-		console.log(lineup.getGameDescription());
-    	console.log(lineup.toSummaryString());
-    	parts.push(lineup);
-    	if (lineup.oppLineup) {
-    		parts.push(lineup.oppLineup);
-    	}
+		console.log(scoring.getGameDescription());
+		console.log(scoring.toSummaryString());
+		parts.push(scoring);
+		if (scoring.oppLineup) {
+			parts.push(scoring.oppLineup);
+		}
 	});
 	parts.push('</LeagueResults>');
 	fs.writeFileAsync(outputFile, parts.join('\r\n')).then(function () {

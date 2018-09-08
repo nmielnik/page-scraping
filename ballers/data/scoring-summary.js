@@ -2,10 +2,9 @@ var cheerio = require('cheerio');
 
 function exists(val) { return ((val) ? true : (val == 0 || val == false || val == "")) };
 
-var BoxScore = {},
+var ScoringSummary = {},
     LineupObj,
     PlayerObj;
-
 
 Math.roundDigits = function(num, places)
 {
@@ -19,7 +18,7 @@ Math.roundDigits = function(num, places)
         var parts = str.split('.');
         var val = Number(parts[0]);
         var suffix = (parts.length > 1) ? parts[1] : '0';
-        
+
         var strDec = '';
         var fRound = true;
         for (var i = places; i >= 0; i--)
@@ -66,49 +65,9 @@ Math.roundDigits = function(num, places)
     return val;
 }
 
-BoxScore.parseTitleData = function($title)
-{
-    var data = {};
-    var title = $title.text();
-    var splitOn = (title.indexOf(" vs ") > -1) ? " vs " : (title.indexOf(" at ") > -1 ? " at " : null);
-    if (splitOn)
-    {
-        var arrSplit = title.split(splitOn);
-        data.homeTeam = arrSplit[0];
-        data.awayTeam = arrSplit[1];
-
-        var playoffs = (data.awayTeam.indexOf(" Box Score: Round ") > 0)
-        splitOn = (!playoffs) ? " Box Score: Week " : "Box Score: Round ";
-        arrSplit = data.awayTeam.split(splitOn);
-        data.awayTeam = arrSplit[0];
-        data.week = arrSplit[1];
-
-        arrSplit = data.week.split(" -");
-        if (playoffs)
-            data.week = 13 + parseInt(arrSplit[0]);
-        else
-            data.week = arrSplit[0];
-    }
-    // This is a BYE week (only one team has a box score)
-    else
-    {
-        var arrSplit = title.split(" Box Score: Round ");
-        data.homeTeam = arrSplit[0];
-        data.awayTeam = null;
-        data.week = arrSplit[1];
-
-        arrSplit = data.week.split(" -");
-        data.week = 13 + parseInt(arrSplit[0]);
-    }
-
-    return data;
-}
-
-BoxScore.parseBoxScore = function(html, playerStats)
+ScoringSummary.parseScoringSummary = function(html)
 {
     var $ = cheerio.load(html);
-
-    var oTitleData = BoxScore.parseTitleData($('head title'));
 
     $('span[title="Probable"], span[title="Questionable"], span[title="Doubtful"], span[title="Out"]').remove();
 
@@ -125,64 +84,23 @@ BoxScore.parseBoxScore = function(html, playerStats)
     tableNames.forEach(function (str) {
         var $table = $('#' + str);
         if ($table.length > 0)
-            arrPlayers = arrPlayers.concat(BoxScore.parsePlayerTable($table, $));
+            arrPlayers = arrPlayers.concat(ScoringSummary.parsePlayerTable($table, $));
         else
             return false;
     });
-    
+
+    var playerScoring = {};
+
     arrPlayers.forEach(function (plyr) {
-        // Merge stats from scoring summary
-        if (plyr.id && playerStats[plyr.id]) {
-            var plyrStats = playerStats[plyr.id];
-            StatTypes.forEach(function (info) {
-                if (info.output && !StatValueOverrides[info.id]) {
-                    var statVal = plyrStats.getStatValue(info.id);
-                    if (statVal) {
-                        plyr.stats[info.id] = statVal;
-                    }
-                }
-            }, this);
-        }
-
-        if (inBench && (plyr.slot != "Bench" && plyr.slot != "IR")) {
-            inBench = false;
-            inOpp = true;
-        }
-        else if (!inBench) {
-            inBench = (plyr.slot == "Bench" || plyr.slot == "IR");
-        }
-
-        if (!inBench) {
-            if (inOpp)
-                oppStarters.push(plyr);
-            else
-                arrStarters.push(plyr);
-        } else {
-            if (inOpp)
-                oppBench.push(plyr);
-            else
-                arrBench.push(plyr);
+        if (plyr.id && !playerScoring[plyr.id]) {
+            playerScoring[plyr.id] = plyr;
         }
     });
 
-    var lineup = new LineupObj(oTitleData.homeTeam, oTitleData.week, arrStarters, arrBench);
-    var oppLineup = (oTitleData.awayTeam && oppStarters.length > 0) ? new LineupObj(oTitleData.awayTeam, oTitleData.week, oppStarters, oppBench) : null;
-    lineup.setOpponent(oppLineup);
-
-    return lineup;
-
-/*    var strFile = "C:\\Temp\\week" + lineup.week + "-parsed.xml";
-
-    writeToFile(lineup.toString(), strFile);
-    if (oppLineup)
-        writeToFile(oppLineup.toString(), strFile);
-    console.log('------------- Box Score Parsing Complete ---------------');
-    console.log(lineup.getGameDescription());
-    console.log(lineup.toSummaryString());
-*/
+    return playerScoring;
 }
 
-BoxScore.parsePlayerTable = function($table, $)
+ScoringSummary.parsePlayerTable = function($table, $)
 {
     var $rows = $table.find('tr'),
         players = [];
@@ -192,14 +110,14 @@ BoxScore.parsePlayerTable = function($table, $)
             var $row = $(elRow);
             if ($row.hasClass('pncPlayerRow') && ($row.hasClass('playerTableBgRow0') || $row.hasClass('playerTableBgRow1')))
             {
-                players.push(BoxScore.buildPlayerFromRow($row, $));
+                players.push(ScoringSummary.buildPlayerFromRow($row, $));
             }
         }
     );
     return players;
 }
 
-BoxScore.buildPlayerFromRow = function($row, $)
+ScoringSummary.buildPlayerFromRow = function($row, $)
 {
     var player = new PlayerObj($row.attr('id'));
     var statIdx = 0;
@@ -248,11 +166,6 @@ BoxScore.buildPlayerFromRow = function($row, $)
                         }
                     }
                 }
-                if (player.position == "K")
-                    statOrder = KickerStatOrder;
-                else if (player.position == "D/ST")
-                    statOrder = DefenseStatOrder;
-
                 if (player.firstName == "Empty")
                     return false;
             }
@@ -285,11 +198,9 @@ BoxScore.buildPlayerFromRow = function($row, $)
                 }
                 else
                 {
-                    var vals = $cell.text().trim().split('/');
-                    for (var i = 0; i < vals.length; i++, statIdx++)
-                    {
-                        player.stats[statOrder[statIdx]] = Math.roundDigits(getCleanValue(vals[i]), 2);
-                    }
+                    var title = $cell.find('span').attr('title');
+                    player.stats[statOrder[statIdx]] = title ? parseInt(getStatFromCalc(title), 10) : 0;
+                    statIdx++;
                 }
             }
         }
@@ -305,6 +216,11 @@ BoxScore.buildPlayerFromRow = function($row, $)
         player.opponentScore = 0;
     }
     return player;
+}
+
+function getStatFromCalc(str)
+{
+    return str.split('*')[0];
 }
 
 function getCleanValue(str)
@@ -413,33 +329,19 @@ var StatID =
     FumRetTD: 2005
 };
 
-var NormalStatOrder = [StatID.Completions, StatID.Attempts, StatID.PassYds, StatID.PassTDs, StatID.PassINTs,
-                   StatID.RushAtt, StatID.RushYds, StatID.RushTDs,
-                   StatID.Rec, StatID.RecYds, StatID.RecTDs, StatID.Tar,
-                   StatID.TwoPt, StatID.FL, StatID.RetTD];
+var NormalStatOrder = [StatID.PassYds, StatID.PassTDs, StatID.Pass2PC, StatID.PassINTs, 
+                    StatID.RushYds, StatID.RushTDs, StatID.Rush2PC,
+                    StatID.RecYds, StatID.RecTDs, StatID.Rec2PC, StatID.Rec,
+                    StatID.FumRecTD, StatID.Fum, StatID.FL,
+                    StatID.KRetTD, StatID.PRetTD, StatID.FumRetTD, StatID.KRetYds, StatID.PRetYds];
 
-var KickerStatOrder = [StatID.FG39, StatID.FG39Att, StatID.FG49, StatID.FG49Att, StatID.FG50, StatID.FG50Att, StatID.FG, StatID.FGAtt, StatID.XP, StatID.XPAtt];
-
-var DefenseStatOrder = [StatID.DefTD, StatID.DefINT, StatID.DefFR, StatID.DefSack, StatID.DefSfty, StatID.DefBlk, StatID.DefPA];
-
-var StatTypes = [new StatInfo('Pts', true), new StatInfo('Tar', false, true), new StatInfo('Attempts'), new StatInfo('Completions'), new StatInfo('PassYds'), new StatInfo('PassTDs'),
-             new StatInfo('Pass2PC', false, true), new StatInfo('PassINTs'), 
-             new StatInfo('RushAtt'), new StatInfo('RushYds'), new StatInfo('RushTDs'), new StatInfo('Rush2PC', false, true),
+var StatTypes = [new StatInfo('Pts', true), new StatInfo('PassYds'), new StatInfo('PassTDs'), new StatInfo('Pass2PC', false, true), new StatInfo('PassINTs'), 
+             new StatInfo('RushYds'), new StatInfo('RushTDs'), new StatInfo('Rush2PC', false, true),
              new StatInfo('RecYds'), new StatInfo('RecTDs'), new StatInfo('Rec2PC', false, true), new StatInfo('Rec'), 
-             new StatInfo('TwoPt'), new StatInfo('Fum'), new StatInfo('FL'), 
-             new StatInfo('FG49'), new StatInfo('FG49Att', false, true), new StatInfo('FG49M', true),
-             new StatInfo('FG50'), new StatInfo('FG50Att', false, true), new StatInfo('FG50M', true), 
-             new StatInfo('FG39'), new StatInfo('FG39Att', false, true), new StatInfo('FG39M', true), 
-             new StatInfo('FG', false, true), new StatInfo('FGAtt', false, true), new StatInfo('XP'), new StatInfo('XPAtt', false, true), new StatInfo('XPM', true), 
-             new StatInfo('DefTD'), new StatInfo('DefINT'), new StatInfo('DefFR'), new StatInfo('DefBlk'), new StatInfo('DefSfty'),
-             new StatInfo('DefSack'), new StatInfo('KOffTD'), new StatInfo('PuntTD'), new StatInfo('RetTD'), new StatInfo('DefPA'),
-             new StatInfo('KRetYds'), new StatInfo('PRetYds'), new StatInfo('KRetTD'), new StatInfo('PRetTD'), new StatInfo('FumRetTD'), new StatInfo('FumRecTD')];
+             new StatInfo('FumRecTD', false, true), new StatInfo('Fum'), new StatInfo('FL'),
+             new StatInfo('KRetYds'), new StatInfo('PRetYds'), new StatInfo('KRetTD'), new StatInfo('PRetTD'), new StatInfo('FumRetTD')];
 
 var StatValueOverrides = [];
-StatValueOverrides[StatID.FG39M] = function() { return this.getStatValue(StatID.FG39Att) - this.getStatValue(StatID.FG39) };
-StatValueOverrides[StatID.FG49M] = function() { return this.getStatValue(StatID.FG49Att) - this.getStatValue(StatID.FG49) };
-StatValueOverrides[StatID.FG50M] = function() { return this.getStatValue(StatID.FG50Att) - this.getStatValue(StatID.FG50) };
-StatValueOverrides[StatID.XPM] = function() { return this.getStatValue(StatID.XPAtt) - this.getStatValue(StatID.XP) };
 StatValueOverrides[StatID.Pts] = function() { return this.points };
 
 PlayerObj = function(iRowId)
@@ -495,104 +397,4 @@ PlayerObj.prototype =
     }
 }
 
-LineupObj = function(iTeamId, iWeekId, arrStarters, arrBench, result)
-{
-    this.teamId = iTeamId;
-    this.week = iWeekId;
-    this.slots = [];
-    this.starters = arrStarters;
-    this.bench = arrBench;
-    this.result = result;
-    this.strtPts = this.bnchPts = this.oppPts = this.oppBnchPts = 0;
-    this.opp = '';
-
-    this.assignSlots();
-}
-LineupObj.prototype =
-{
-    getGameDescription: function() { return this.teamId + ' vs ' + this.opp + ' - Week ' + this.week },
-    toSummaryString: function() { return this.result + ' (' + this.strtPts + ' - ' + this.oppPts + ') - Benches: [' + this.bnchPts + ' - ' + this.oppBnchPts + ']' },
-    setOpponent: function(oLineup)
-    {
-        this.result = (exists(oLineup) && this.strtPts < oLineup.strtPts) ? "L" : "W";
-
-        if (exists(oLineup))
-        {
-            this.oppLineup = oLineup;
-            this.opp = oLineup.teamId;
-            this.oppPts = oLineup.strtPts;
-            this.oppBnchPts = oLineup.bnchPts;
-            if (oLineup.opp != this.teamId)
-                oLineup.setOpponent(this);
-        }
-        else
-        {
-            this.opp = "BYE";
-            this.oppPts = 0;
-        }
-    },
-    assignSlots: function()
-    {
-        for (var i = 0; i < this.starters.length; i++)
-        {
-            var currPlayer = this.starters[i];
-            this.strtPts += currPlayer.getStatValue(StatID.Pts);
-            var currSlot = currPlayer.slot;
-            if (!exists(this.slots[currSlot]))
-            {
-                this.slots[currSlot] = currPlayer;
-            }
-            else
-            {
-                var uniq = 1;
-                var newSlot = currSlot + uniq;
-                while (this.slots[newSlot])
-                {
-                    uniq++;
-                    newSlot = currSlot + uniq;
-                }
-                this.slots[newSlot] = currPlayer;
-                currPlayer.slot = newSlot;
-            }
-        }
-        this.strtPts = Math.roundDigits(this.strtPts, 2);
-        for (var i = 0; i < this.bench.length; i++)
-        {
-            var currPlayer = this.bench[i];
-            this.bnchPts += currPlayer.getStatValue(StatID.Pts);
-            var currSlot = currPlayer.slot;
-            if (!exists(this.slots[currSlot]))
-            {
-                this.slots[currSlot] = currPlayer;
-            }
-            else
-            {
-                var benchNum = 1;
-                var newSlot = currSlot + benchNum;
-                while (this.slots[newSlot])
-                {
-                    benchNum++;
-                    newSlot = currSlot + benchNum;
-                }
-                this.slots[newSlot] = currPlayer;
-                currPlayer.slot = newSlot;
-            }
-        }
-        this.bnchPts = Math.roundDigits(this.bnchPts, 2);
-    },
-    toString: function()
-    {
-        var sRet = '<Lineup week="' + this.week + '" teamID="' + this.teamId + '" points="' + this.strtPts + '" bench="' + this.bnchPts;
-        sRet += '" result="' + this.result + '" opponent="' + this.opp + '" opponentScore="' + this.oppPts + '" >\r\n';
-        this.starters.forEach(function (oPlayer) {
-            sRet += oPlayer.toString();
-        });
-        this.bench.forEach(function (oPlayer) {
-            sRet += oPlayer.toString();
-        });
-        sRet += '</Lineup>\r\n';
-        return sRet;
-    }
-}
-
-module.exports = BoxScore;
+module.exports = ScoringSummary;

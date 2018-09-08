@@ -4,7 +4,7 @@ function exists(o) { return o || (o === false || o === '' || o === 0) };
 function isString(s) { return typeof (s) == 'string' }
 
 // Need to look this up in the database
-var NEXT_MOVE_ID = 1013;
+var NEXT_MOVE_ID = 1544;
 
 var TRANS = {},
     STRING = {},
@@ -83,6 +83,13 @@ var Group = function (id, $cells, iYear) {
     var action = typeCell.childNodes[5] ? typeCell.childNodes[5].nodeValue : typeCell.childNodes[4].nodeValue;
 
     //this.setAction(elRow.cells[1].childNodes[5].nodeValue);
+    if (!action) {
+        console.log('**************** ERROR ACTION ********************');
+        console.log(typeCell.childNodes.length + ' nodes');
+        typeCell.childNodes.forEach(function (node) {
+            console.log(node.nodeValue);
+        });
+    }
     this.setAction(action);
 
     var elTrans = $cells.get(2);
@@ -400,7 +407,7 @@ DATETIME.ParseESPNTableCell = function (elCell, iYear) {
     }
     var iMinutes = parseInt(arrTimeParts[1]);
 
-    if (iMonth <= 1) {
+    if (iMonth <= 4) {
         iYear++;
     }
 

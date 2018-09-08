@@ -23,7 +23,7 @@ if (!argMap.outputFile) {
 var outputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/BallersXML', argMap.outputFile);
 
 var srcDir = '//EINSTEIN/Web/BallersUnite/RawHTML';
-var srcFileFormat = `${year}Transactions.html`;
+var srcFileFormat = `${year}Transactions.htm`;
 var filePath = path.join(srcDir, srcFileFormat);
 Parser.parseFile({
 	filePath: filePath
