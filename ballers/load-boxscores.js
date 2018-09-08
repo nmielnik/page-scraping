@@ -6,7 +6,7 @@ var fs =  Promise.promisifyAll(require("fs"));
 
 var Parser = require("../parser");
 var BoxScore = require("./data/boxscore.js");
-
+var ScoringSummary = require("./data/scoring-summary.js");
 
 var year = argMap.year || 2016;
 if (!year || isNaN(year) || year < 2006 || year > new Date().getFullYear()) {
@@ -36,16 +36,26 @@ var srcDir = '//EINSTEIN/Web/BallersUnite/RawHTML';
 var promises = [];
 games.forEach(function (game) {
 	var fileName = `FullBoxScore-${year}-Week${week}-${game}.htm`;
+	var otherFileName = `FullBoxScore-${year}-Week${week}-Scoring-${game}.htm`;
 
-	promises.push(Parser.parseFile({
-		filePath: path.join(srcDir, fileName)
-	}));
+	promises.push(Promise.all([
+			Parser.parseFile({ filePath: path.join(srcDir, fileName) }),
+			Parser.parseFile({ filePath: path.join(srcDir, otherFileName) })
+		])
+		.then(function (res) {
+			return {
+				boxScoreBody: res[0].body,
+				scoringBody: res[1].body
+			};
+		})
+	);
 });
 
 Promise.all(promises).spread(function () {
 	var parts = ['<LeagueResults year="' + year + '">'];
 	Array.prototype.slice.apply(arguments).forEach(function (data) {
-		var lineup = BoxScore.parseBoxScore(data.body);
+		var scoring = ScoringSummary.parseScoringSummary(data.scoringBody);
+		var lineup = BoxScore.parseBoxScore(data.boxScoreBody, scoring);
 		console.log('------------------------------');
 		console.log(lineup.getGameDescription());
     	console.log(lineup.toSummaryString());
