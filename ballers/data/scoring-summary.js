@@ -138,7 +138,7 @@ ScoringSummary.buildPlayerFromRow = function($row, $)
             }
             else if ($cell.hasClass('playertablePlayerName'))
             {
-                var rawName = getCleanValue($cell.text()).replace(/\*/gi, '').trim();
+                var rawName = getCleanValue($cell.text()).replace(/\*/gi, '').replace(/St\. /gi, 'St.').trim();
                 if (rawName.indexOf(', ') == -1)
                 {
                     var parts = rawName.split(' ');

@@ -114,26 +114,29 @@ var Group = function (id, $cells, iYear) {
 
 Group.prototype = {
     setAction: function (sActionData) {
-        switch (sActionData.toLowerCase()) {
-            case "add/drop":
-            case "add/drop (":
+        var ignoreSuffixes = [' (joe lazzaro)', ' (nate mielnik)', ' (geoffrey wright)', ' (mark baver)', ' (by lm)', ' (<a href="http://sportsnation.espn.go.com/fans/jrsyjoe4" target="_blank">Joe Lazzaro</a>)'];
+        var editedAction = sActionData.toLowerCase();
+        ignoreSuffixes.forEach(function (toIgnore) {
+            if (editedAction.indexOf(toIgnore) !== -1) {
+                editedAction = editedAction.split(toIgnore)[0];
+            }
+        });
+        switch (editedAction) {
+            case 'add/drop':
+            case 'add/drop (':
                 this.action = GroupType.DropAdd;
                 break;
-            case "add":
-            case "add (by lm)":
-            case "add (waivers)":
+            case 'add':
+            case 'add (waivers)':
             case 'add (':
-            case 'add (<a href="http://sportsnation.espn.go.com/fans/jrsyjoe4" target="_blank">Joe Lazzaro</a>)':
                 this.action = GroupType.Add;
                 break;
-            case "drop":
-            case "drop (by lm)":
-            case "drop (":
-            case 'drop (<a href="http://sportsnation.espn.go.com/fans/jrsyjoe4" target="_blank">Joe Lazzaro</a>)':
+            case 'drop':
+            case 'drop (':
                 this.action = GroupType.Drop;
                 break;
-            case "trade upheld (by lm)":
-            case "trade processed":
+            case 'trade upheld':
+            case 'trade processed':
                 this.action = GroupType.Trade;
                 break;
             default:
@@ -295,6 +298,9 @@ Transaction.prototype = {
                 break;
             case 'puerburrito':
                 this.destination = "PUER";
+                break;
+            case 'law':
+                this.destination = "LAW";
                 break;
             default:
                 this.destination = sDest;

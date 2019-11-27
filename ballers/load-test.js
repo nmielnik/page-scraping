@@ -5,7 +5,7 @@ var Promise = require("bluebird");
 var fs =  Promise.promisifyAll(require("fs"));
 
 var Parser = require("../parser");
-var BoxScore = require("./data/boxscore.js");
+var BoxScore = require("./data/boxscore.js").BoxScore;
 var ScoringSummary = require("./data/scoring-summary.js");
 
 var year = 2017;

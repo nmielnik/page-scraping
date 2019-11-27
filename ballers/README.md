@@ -6,6 +6,7 @@
 * Roy Williams (suffix = E.)
 * Mike Williams (id = USC)
 * Mike Williams (id = Syracuse)
+* MIke Williams (id = Clemson)
 * Alex Smtih (id = Stanford)
 * Ryan Grant (id = Tulane)
 * Ryan Grant (id = Notre Dame)
@@ -33,3 +34,13 @@
 * Andre Phillip Smith
 * Antwaan Randle El
 * Joe Don Duncan
+* Duke Johnson (suffix = Jr.)
+* Willie Snead (suffix = IV)
+* Equanimeous St. Brown ("St. Brown" -> "St.Brown")
+* Robert Griffin (suffix = III)
+* Jeff Wilson (suffix = Jr.)
+* Mark Ingram (suffix = II)
+* Todd Gurley (suffix = II)
+* Michael Thomas (id = Ohio St)
+* Marvin Jones (suffix = Jr.)
+* Will Fuller (suffix = V)

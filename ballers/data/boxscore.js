@@ -220,7 +220,7 @@ BoxScore.buildPlayerFromRow = function($row, $)
             }
             else if ($cell.hasClass('playertablePlayerName'))
             {
-                var rawName = getCleanValue($cell.text()).replace(/\*/gi, '').trim();
+                var rawName = getCleanValue($cell.text()).replace(/\*/gi, '').replace(/St\. /gi, 'St.').trim();
                 if (rawName.indexOf(', ') == -1)
                 {
                     var parts = rawName.split(' ');
@@ -233,6 +233,11 @@ BoxScore.buildPlayerFromRow = function($row, $)
                 else
                 {
                     var parts = rawName.split(', ');
+                    /* PLAYER NAME PARSING
+                    var tempParts = parts[0].split(' ');
+                    if (tempParts.length > 2) {
+                        console.log(JSON.stringify(tempParts));
+                    }*/
                     player.splitAndSet(parts[0], ' ', ['firstName', 'lastName']);
                     var infoParts = parts[1].replace(/,/gi, '').split(' ');
                     player.team = getCleanValue(infoParts[0]);
@@ -595,4 +600,8 @@ LineupObj.prototype =
     }
 }
 
-module.exports = BoxScore;
+module.exports = {
+    BoxScore: BoxScore,
+    LineupObj: LineupObj,
+    PlayerObj: PlayerObj
+};
