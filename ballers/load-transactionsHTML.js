@@ -7,7 +7,7 @@ var Promise = require("bluebird");
 var fs =  Promise.promisifyAll(require("fs"));
 
 var Parser = require("../parser");
-var Transactions = require("./data/transactions.js");
+var Transactions = require("./data/transactionsHTML.js");
 
 
 var year = argMap.year || 2015;

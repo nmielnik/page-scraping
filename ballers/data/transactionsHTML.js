@@ -287,9 +287,6 @@ Transaction.prototype = {
             case 'silly nannies':
                 this.destination = "LSN";
                 break;
-            case 'jihad':
-                this.destination = "JEWS";
-                break;
             case 'mills':
                 this.destination = "MILL";
                 break;
@@ -301,6 +298,9 @@ Transaction.prototype = {
                 break;
             case 'law':
                 this.destination = "LAW";
+                break;
+            case 'mob':
+                this.destination = "MOB";
                 break;
             default:
                 this.destination = sDest;

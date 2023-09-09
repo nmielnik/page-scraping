@@ -12,6 +12,8 @@ if (!year || isNaN(year) || year < 2006 || year > new Date().getFullYear()) {
 	return;
 }
 var season = year - 2006;
+if (year > 2020)
+	season--;
 var inputFileName = `espn-Ballers-${year}.json`;
 
 if (!argMap.outputFile) {

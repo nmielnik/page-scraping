@@ -6,6 +6,7 @@ var path = require("path");
 var Promise = require("bluebird");
 var fs =  Promise.promisifyAll(require("fs"));
 var moment = require("moment");
+var ESPNData = require('./data/espnData.js');
 
 var year = argMap.year || 2016;
 if (!year || isNaN(year) || year < 2006 || year > new Date().getFullYear()) {
@@ -13,6 +14,8 @@ if (!year || isNaN(year) || year < 2006 || year > new Date().getFullYear()) {
 	return;
 }
 var season = year - 2006;
+if (year > 2020)
+	season--;
 var inputFileName = `espn-NFLSchedule-${year}.json`;
 
 if (!argMap.outputFile) {
@@ -96,6 +99,8 @@ var detectTimeType = function(date) {
 			return 2;
 		}
 		return 1;
+	} else if (date.day() === 5) { // Friday
+		return 13;
 	} else if (date.day() === 6) { // Saturday
 		if (date.hour() >= 20) {
 			return 6;
@@ -123,7 +128,7 @@ espnJSON.settings.proTeams.forEach(function (currTeam) {
 		if (!teamNames[currTeam.id]) {
 			teamNames[currTeam.id] = currTeam.name;
 		}
-		for(var period = 1; period <= 17; period++) {
+		for(var period = 1; period <= 18; period++) {
 			if (currTeam.proGamesByScoringPeriod[period]) {
 				var currGame = currTeam.proGamesByScoringPeriod[period][0];
 				if (currGame && currGame.homeProTeamId === currTeam.id) {
@@ -131,8 +136,8 @@ espnJSON.settings.proTeams.forEach(function (currTeam) {
 					var newGame = {
 						week: currGame.scoringPeriodId,
 						season: season,
-						homeTeam: ESPNIDtoBallersID[currGame.homeProTeamId],
-						awayTeam: ESPNIDtoBallersID[currGame.awayProTeamId],
+						homeTeam: ESPNData.NFLTeamESPNIDtoBallersID[currGame.homeProTeamId],
+						awayTeam: ESPNData.NFLTeamESPNIDtoBallersID[currGame.awayProTeamId],
 						timeType: detectTimeType(gameDate),
 						dateStr: gameDate.format('ddd DD/MM/YY'),
 						timeStr: gameDate.format('h:mm A')

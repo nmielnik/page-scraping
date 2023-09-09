@@ -33,11 +33,12 @@ const SPECIAL_CASES = {
         last: 'Miller',
         'identifier': 'NebOmaha'
     },
+    /*
     'Mike Davis': {
         first: 'Mike',
         last: 'Davis',
         identifier: 'SC'
-    },
+    },*/
     'Chris Givens': {
         first: 'Chris',
         last: 'Givens',
@@ -111,6 +112,11 @@ const SPECIAL_CASES = {
         last: 'Ingram',
         suffix: 'II'
     },
+    'Mark Ingram II': {
+        first: 'Mark',
+        last: 'Ingram',
+        suffix: 'II'
+    },
     'Michael Thomas': {
         first: 'Michael',
         last: 'Thomas',
@@ -129,6 +135,21 @@ const SPECIAL_CASES = {
         first: 'DJ',
         last: 'Moore'
     },
+    'D.J. Chark': {
+        first: 'DJ',
+        last: 'Chark',
+        suffix: 'Jr.'
+    },
+    'DJ Chark Jr.': {
+        first: 'DJ',
+        last: 'Chark',
+        suffix: 'Jr.'
+    },
+    'DJ Chark': {
+        first: 'DJ',
+        last: 'Chark',
+        suffix: 'Jr.'
+    },
     'AJ Green': {
         first: 'A.J.',
         last: 'Green'
@@ -143,17 +164,37 @@ const SPECIAL_CASES = {
         last: 'Williams',
         identifier: 'Clemson'
     },
-    'Odell Beckham Jr': {
+    'Odell Beckham Jr.': {
+        first: 'Odell',
+        last: 'Beckham',
+        suffix: 'Jr.'
+    },
+    'Odell Beckham': {
         first: 'Odell',
         last: 'Beckham',
         suffix: 'Jr.'
     },
     'Will Fuller': {
-        first: 'Will',
+        first: 'William',
+        last: 'Fuller',
+        suffix: 'V'
+    },
+    'William Fuller': {
+        first: 'William',
+        last: 'Fuller',
+        suffix: 'V'
+    },
+    'William Fuller V': {
+        first: 'William',
         last: 'Fuller',
         suffix: 'V'
     },
     'Marvin Jones': {
+        first: 'Marvin',
+        last: 'Jones',
+        suffix: 'Jr.'
+    },
+    'Marvin Jones Jr.': {
         first: 'Marvin',
         last: 'Jones',
         suffix: 'Jr.'
@@ -185,6 +226,11 @@ const SPECIAL_CASES = {
         last: 'Henderson',
         suffix: 'Jr.'
     },
+    'Darrell Henderson Jr.': {
+        first: 'Darrell',
+        last: 'Henderson',
+        suffix: 'Jr.'
+    },
     'Chris Herndon IV': {
         first: 'Chris',
         last: 'Herndon'
@@ -192,6 +238,92 @@ const SPECIAL_CASES = {
     'JJ Arcega-Whiteside': {
         first: 'J.J.',
         last: 'Arcega-Whiteside'
+    },
+    'A.J. Dillon': {
+        first: 'AJ',
+        last: 'Dillon'
+    },
+    'K.J. Hamler': {
+        first: 'KJ',
+        last: 'Hamler'
+    },
+    'Amon-Ra St. Brown': {
+        first: 'Amon-Ra',
+        last: 'St. Brown'
+    },
+    'Ronald Jones': {
+        first: 'Ronald',
+        last: 'Jones',
+        suffix: 'II'
+    },
+    'Tony Jones': {
+        first: 'Tony',
+        last: 'Jones',
+        suffix: 'Jr.'
+    },
+    'Irv Smith Jr.': {
+        first: 'Irv',
+        last: 'Smith',
+        suffix: 'Jr.'
+    },
+    'Laviska Shenault Jr.': {
+        first: 'Laviska',
+        last: 'Shenault',
+        suffix: 'Jr.'
+    },
+    'Henry Ruggs III': {
+        first: 'Henry',
+        last: 'Ruggs',
+        suffix: 'III'
+    },
+    'Terrace Marshall Jr.': {
+        first: 'Terrace',
+        last: 'Marshall',
+        suffix: 'Jr.'
+    },
+    'Tony Jones Jr.': {
+        first: 'Tony',
+        last: 'Jones',
+        suffix: 'Jr.'
+    },
+    'Jeff Wilson Jr.': {
+        first: 'Jeff',
+        last: 'Wilson',
+        suffix: 'Jr.'
+    },
+    'Jeff Wilson': {
+        first: 'Jeff',
+        last: 'Wilson',
+        suffix: 'Jr.'
+    },
+    'Robby Anderson': {
+        first: 'Robbie',
+        last: 'Anderson'
+    },
+    'Kenneth Walker': {
+        first: 'Kenneth',
+        last: 'Walker',
+        suffix: 'III'
+    },
+    'John Metchie': {
+        first: 'John',
+        last: 'Metchie',
+        suffix: 'III'
+    },
+    'Michael Pittman': {
+        first: 'Michael',
+        last: 'Pittman',
+        suffix: 'Jr.'
+    },
+    'Brian Robinson Jr.': {
+        first: 'Brian',
+        last: 'Robinson',
+        suffix: 'Jr.'
+    },
+    'Brian Robinson': {
+        first: 'Brian',
+        last: 'Robinson',
+        suffix: 'Jr.'
     }
 };
 

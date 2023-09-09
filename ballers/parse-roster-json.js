@@ -14,6 +14,8 @@ if (!year || isNaN(year) || year < 2006 || year > new Date().getFullYear()) {
 	return;
 }
 var season = year - 2006;
+if (year > 2019)
+	season -= 1;
 
 var week = argMap.week;
 if (!week) {
@@ -32,8 +34,8 @@ if (!argMap.outputFile) {
 }
 var outputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/JSON', argMap.outputFile);
 
-var inputFileName = `${year}-Rosters-Week${week}.json`;
 
+//var inputFileName = `${year}-Rosters-Week${week}.json`;
 //var inputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/BallersXML', inputFileName);
 //var rawJSON = require(inputFile);
 
