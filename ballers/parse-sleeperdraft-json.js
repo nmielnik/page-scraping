@@ -166,6 +166,7 @@ var commishManualPicks = {
 };
 */
 
+/* 2023 Draft Settings
 var teamMap = {
 	"472860481078423552": 1,
 	"472173428724461568": 6,
@@ -251,6 +252,167 @@ var commishManualPicks = {
 		12: 1
 	}
 };
+*/
+
+/* 2024 Draft Settings
+
+var teamMap = {
+	"472860481078423552": 1,
+	"472173428724461568": 6,
+	"473958668950302720": 3,
+	"1130725816209514496": 4,
+	"474224122742697984": 12,
+	"474092708718178304": 5,
+	"474047944450895872": 9,
+	"738582154770051072": 7,
+	"738016950403395584": 2,
+	"472241202268205056": 11,
+	"1000624559290163200": 8,
+	"872988876044697600": 10
+};
+
+var orderToTeam = [0, 2, 7, 8, 10, 11, 3, 9, 12, 6, 4, 5, 1];
+var teamToOrder = [0, 12, 1, 6, 10, 11, 9, 2, 3, 7, 4, 5, 8];
+
+// Any traded draft picks
+var tradedPicks = {
+	3: {
+		7: 7,
+		9: 11
+	},
+	4: {
+		7: 7,
+		10: 8
+	},
+	5: {
+		2: 9,
+		3: 4
+	},
+	6: {
+		2: 9,
+		12: 8
+	},
+	7: {
+		7: 11,
+		10: 10
+	},
+	8: {
+		5: 6,
+		11: 10,
+		12: 2
+	},
+	9: {
+		3: 1,
+		12: 10
+	},
+	12: {
+		5: 9
+	},
+	14: {
+		4: 4
+	},
+	15: {
+		4: 1
+	},
+	17: {
+		1: 1,
+		3: 4,
+		4: 5,
+		10 :8
+	}
+};
+
+// Any keepers kept in place of a traded draft pick
+var tradedPickKeepers = {};
+
+// Round + Pick of the commish's keepers
+var commishKeepers = {
+	3: { 12: true },
+	4: { 12: true },
+	7: { 12: true }
+};
+
+// Picks Manually selected by commisioner
+var commishManualPicks = {
+};
+
+*/
+
+var teamMap = {
+	"472860481078423552": 1,
+	"472173428724461568": 6,
+	"1263736388499550208": 3,
+	"1130725816209514496": 4,
+	"474224122742697984": 12,
+	"474092708718178304": 5,
+	"474047944450895872": 9,
+	"738582154770051072": 7,
+	"738016950403395584": 2,
+	"472241202268205056": 11,
+	"1000624559290163200": 8,
+	"872988876044697600": 10
+};
+
+var orderToTeam = [0, 6, 3, 10, 5, 4, 9, 8, 11, 1, 2, 12, 7];
+var teamToOrder = [0, 9, 10, 2, 5, 4, 1, 12, 7, 6, 3, 8, 11];
+
+// Any traded draft picks
+var tradedPicks = {
+	3: {
+		7: 4
+	},
+	4: {
+		5: 8
+	},
+	6: {
+		7: 4
+	},
+	7: {
+		1: 1,
+		2: 5
+	},
+	9: {
+		7: 1,
+		9: 6
+	},
+	12: {
+		9: 8
+	},
+	17: {
+		4: 3,
+		5: 8
+	}
+};
+
+// Any keepers kept in place of a traded draft pick
+var tradedPickKeepers = {};
+
+// Round + Pick of the commish's keepers
+var commishKeepers = {
+	2: { 9: true },
+	8: { 9: true },
+	13: { 9: true }
+};
+
+// Picks Manually selected by commisioner
+var commishManualPicks = {
+	1: {
+		6: 9,
+		7: 8,
+		9: 1,
+		10: 2
+	},
+	3: {
+		11: 12
+	},
+	8: {
+		7: 8
+	},
+	12: {
+		7: 8,
+		9: 8
+	}
+};
 
 
 var argMap = require('minimist')(process.argv.slice(2));
@@ -273,7 +435,7 @@ if (!argMap.outputFile) {
 	console.error('outputFile: ' + argMap.outputFile + ' is invalid');
 	return;
 }
-var outputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/JSON', argMap.outputFile);
+var outputFile = path.join('D:/Projects/BallersDataUtil/OldBallersData/JSON', argMap.outputFile);
 
 
 var season = year - 2006;
@@ -281,7 +443,7 @@ if (year > 2020)
 	season--;
 var inputFileName = `sleeper-Draft-${year}.json`;
 
-var inputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/JSON', inputFileName);
+var inputFile = path.join('D:/Projects/BallersDataUtil/OldBallersData/JSON', inputFileName);
 
 // For testing
 var keepers = [[], [], [], [], [], [], [], [], [], [], [], [], []];

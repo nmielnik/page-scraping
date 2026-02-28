@@ -32,11 +32,11 @@ if (!argMap.outputFile) {
 	console.error('outputFile: ' + argMap.outputFile + ' is invalid');
 	return;
 }
-var outputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/JSON', argMap.outputFile);
+var outputFile = path.join('D:/Projects/BallersDataUtil/OldBallersData/JSON', argMap.outputFile);
 
 
 //var inputFileName = `${year}-Rosters-Week${week}.json`;
-//var inputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/BallersXML', inputFileName);
+//var inputFile = path.join('D:/Projects/BallersDataUtil/OldBallersData/BallersXML', inputFileName);
 //var rawJSON = require(inputFile);
 
 var twoPtFunction = function(allStats) { return (allStats[19] || 0) + (allStats[26] || 0) + (allStats[44] || 0); };
@@ -141,4 +141,7 @@ fetchTeamWeeks.getTeamWeeksJSON(leagueId, year, week, teams)
 			.catch(function (err) {
 				console.log(err);
 			});
+	})
+	.catch(function (err) {
+		console.log(err);
 	});

@@ -20,9 +20,9 @@ if (!argMap.outputFile) {
 	console.error('outputFile: ' + argMap.outputFile + ' is invalid');
 	return;
 }
-var outputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/JSON', argMap.outputFile);
+var outputFile = path.join('D:/Projects/BallersDataUtil/OldBallersData/JSON', argMap.outputFile);
 
-var inputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/JSON', inputFileName);
+var inputFile = path.join('D:/Projects/BallersDataUtil/OldBallersData/JSON', inputFileName);
 
 var espnJSON = require(inputFile);
 

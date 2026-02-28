@@ -3,7 +3,7 @@ var ESPNData = require('../data/espnData.js');
 var SPECIAL_NAMES = require('../data/player-name-special-cases.js').PlayerNames;
 
 // Need to look this up in the database
-var NEXT_MOVE_ID = 1868;
+var NEXT_MOVE_ID = 2023;
 
 var GroupType = { DropAdd: "Add/Drop", Add: "Add", Drop: "Drop", Trade: "Trade" },
     TransType = { Dropped: "Dropped", Waived: "Waived", Signed: "Signed", Claimed: "Claimed", Trade: "Traded", Acquire: "Acquired", Draft: "Drafted", AcceptTrade: "AcceptedTrade", AcceptTradeDrop: "AcceptedTradeDrop" };
@@ -82,10 +82,11 @@ var Group = function (iYear, topic) {
 			var newTrans = new Transaction(msg);
 
 			//console.log(JSON.stringify(newTrans));
-			if (!newTrans.action) {
+			/*if (!newTrans.action) {
+				console.error('No Action found');
 				console.error(newTrans);
 				console.error(JSON.stringify(msg));
-			}
+			}*/
 			arr.push(newTrans);
 			if (newTrans.action === TransType.Acquire) {
 				arr.push(newTrans.duplicate({ action: TransType.Trade, team: newTrans.sourceId }));
@@ -105,7 +106,7 @@ Group.prototype = {
 		if (!this.trans.length)
 			this.action = 'Invalid: No Transactions';
 		else if (this.trans.some(function (x) { return x.action.indexOf('LM Action') == 0; }))
-			this.action = 'Ignored: LM Action';
+			this.action = 'Ignored: ' + this.trans.find(function (x) { return x.action.indexOf('LM Action') == 0; }).action;
 		else if (this.trans.some(function (x) { return x.action.indexOf('Invalid') == 0; }))
 			this.action = 'Invalid: Invalid Trans';
 		else if (this.trans.some(function (x) { return x.action == TransType.Trade; }))
@@ -118,7 +119,7 @@ Group.prototype = {
 		else if (this.trans.some(function (x) { return x.action == TransType.Waived; }))
 			this.action = GroupType.Drop;
 		else if (this.trans.some(function (x) { return x.action == TransType.AcceptTrade || x.action == TransType.AcceptTradeDrop; }))
-			this.action = 'Invalid: AcceptedTrade';
+			this.action = 'Ignored: AcceptedTrade';
 		else
 			this.action = 'Invalid: Unknown';
 	},
@@ -189,6 +190,7 @@ Transaction.prototype = {
 		switch (type) {
 			// Added
 			case 180:
+			case 178: // Added (by LM)
 				{
 					this.action = TransType.Signed;
 					this.team = ESPNData.FranchiseESPNIDtoBallersID[msg['to']];
@@ -252,17 +254,47 @@ Transaction.prototype = {
 				}
 				break;
 			case 138:
+				{
+					this.action = "LM Action - Schedule Change";
+				}
+				break;
 			case 167:
+			case 165:
+			case 164:
+			case 162:
+			case 128:
+				{
+					this.action = "LM Action - Team Info Update";
+				}
+				break;
+			case 179:
+				{
+					this.action = "LM Action - Transaction Counter/Budget Update";
+				}
+				break;
 			case 174:
 			case 175:
+			case 176:
+			case 177:
+			case 156:
+			case 163:
+			case 119:
+			case 120:
 				{
-					this.action = "LM Action";
+					this.action = "LM Action - Rule Change";
+				}
+				break;
+			case 252:
+				{
+					this.action = "LM Action - Update Trade Availability";
 				}
 				break;
 			default:
 				{
                 	this.action = "Invalid: " + type;
-                 	console.log(JSON.stringify(msg, null, 2));
+                	console.error('Unknown Transaction Type');
+                	console.error(new Date(msg['date']).toString());
+                 	console.error(JSON.stringify(msg, null, 2));
                 }
                 break;
 		}

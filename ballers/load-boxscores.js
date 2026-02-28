@@ -30,7 +30,7 @@ if (!argMap.outputFile) {
 	console.error('outputFile: ' + argMap.outputFile + ' is invalid');
 	return;
 }
-var outputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/BallersXML', argMap.outputFile);
+var outputFile = path.join('D:/Projects/BallersDataUtil/OldBallersData/BallersXML', argMap.outputFile);
 
 var srcDir = '//EINSTEIN/Web/BallersUnite/RawHTML';
 var promises = [];

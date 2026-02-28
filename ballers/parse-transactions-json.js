@@ -27,13 +27,13 @@ if (!argMap.outputFile) {
 	console.error('outputFile: ' + argMap.outputFile + ' is invalid');
 	return;
 }
-var outputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/BallersXML', argMap.outputFile);
+var outputFile = path.join('D:/Projects/BallersDataUtil/OldBallersData/BallersXML', argMap.outputFile);
 
 var inputFiles = [];
 for (var i = 1; i <= numFiles; i++) {
-	inputFiles.push(require(path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/JSON', `${year}-Transactions${i}.json`)));
+	inputFiles.push(require(path.join('D:/Projects/BallersDataUtil/OldBallersData/JSON', `${year}-Transactions${i}.json`)));
 }
-var playerFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/JSON', playersFileName);
+var playerFile = path.join('D:/Projects/BallersDataUtil/OldBallersData/JSON', playersFileName);
 var playerJSON = require(playerFile);
 
 var transactions = Transactions.parseTransactions(year, inputFiles, playerJSON);

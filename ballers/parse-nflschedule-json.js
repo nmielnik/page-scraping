@@ -22,7 +22,7 @@ if (!argMap.outputFile) {
 	console.error('outputFile: ' + argMap.outputFile + ' is invalid');
 	return;
 }
-var outputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/JSON', argMap.outputFile);
+var outputFile = path.join('D:/Projects/BallersDataUtil/OldBallersData/JSON', argMap.outputFile);
 
 var ESPNIDtoBallersID = {
 	"0": 34,
@@ -61,7 +61,7 @@ var ESPNIDtoBallersID = {
 };
 
 
-var inputFile = path.join('//EINSTEIN/Projects/Dev/Visual Studio Projects/BallersDataUtil/OldBallersData/JSON', inputFileName);
+var inputFile = path.join('D:/Projects/BallersDataUtil/OldBallersData/JSON', inputFileName);
 
 var espnJSON = require(inputFile);
 
@@ -108,6 +108,8 @@ var detectTimeType = function(date) {
 			return 5;
 		}
 		return 4;
+	} else if (date.day() === 3) { // Wednesday
+		return 14;
 	} else if (date.day() !== 0) {
 		console.error(`Invalid day of week: ${date.toString()}`);
 		return -1;
